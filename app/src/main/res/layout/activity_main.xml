@@ -45,7 +45,7 @@
         android:layout_width="376dp"
         android:layout_height="549dp"
         android:layout_marginTop="16dp"
-        app:constraint_referenced_ids="btn7,btn8,btn9,btnBackspace,btnDivide,btn4,btn5,btn6,btnMultiply,btn1,btn2,btn3,btnSubtract,btn0,btnClear,btnEqual,btnAdd"
+        app:constraint_referenced_ids="btn7,btn8,btn9,btnBackspace,btnDivide,btn4,btn5,btn6,btnMultiply,btn1,btn2,btn3,btnSubtract,btn0,btnDot,btnClear,btnEqual,btnAdd"
         app:flow_horizontalGap="8dp"
         app:flow_maxElementsWrap="4"
         app:flow_verticalGap="8dp"
@@ -159,6 +159,13 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:text="0" />
+
+    <Button
+        android:id="@+id/btnDot"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="." />
 
     <Button
         android:id="@+id/btnEqual"

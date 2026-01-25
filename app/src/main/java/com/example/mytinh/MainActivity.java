@@ -69,6 +69,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        findViewById(R.id.btnDot).setOnClickListener(v -> {
+            if (currentNumber.isEmpty()){
+                currentNumber = "0.";
+                tvResult.setText(currentNumber);
+                return;
+            }
+
+            if (!currentNumber.contains(".")){
+                currentNumber += ".";
+                tvResult.setText(currentNumber);
+            }
+        });
     }
 
     private void setNumberListeners() {
