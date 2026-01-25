@@ -38,22 +38,21 @@
         android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvExpression" />
+        app:layout_constraintTop_toBottomOf="@id/tvExpression" />
 
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/flow"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="376dp"
+        android:layout_height="549dp"
         android:layout_marginTop="16dp"
-        app:constraint_referenced_ids="btn7,btn8,btn9,btnDivide,btn4,btn5,btn6,btnMultiply,btn1,btn2,btn3,btnSubtract,btn0,btnClear,btnEqual,btnAdd"
+        app:constraint_referenced_ids="btn7,btn8,btn9,btnBackspace,btnDivide,btn4,btn5,btn6,btnMultiply,btn1,btn2,btn3,btnSubtract,btn0,btnClear,btnEqual,btnAdd"
         app:flow_horizontalGap="8dp"
         app:flow_maxElementsWrap="4"
         app:flow_verticalGap="8dp"
         app:flow_wrapMode="aligned"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvResult" />
+        app:layout_constraintTop_toBottomOf="@id/tvResult" />
 
     <Button
         android:id="@+id/btn7"
@@ -75,6 +74,13 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:text="9" />
+
+    <Button
+        android:id="@+id/btnBackspace"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="DEL" />
 
     <Button
         android:id="@+id/btnDivide"
