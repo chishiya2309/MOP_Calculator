@@ -58,6 +58,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnEqual).setOnClickListener(v -> calculate());
+
+        findViewById(R.id.btnBackspace).setOnClickListener(v -> {
+            if (currentNumber != null && !currentNumber.isEmpty()) {
+                currentNumber = currentNumber.substring(0, currentNumber.length() - 1);
+                if (currentNumber.isEmpty()) {
+                    tvResult.setText("0");
+                } else {
+                    tvResult.setText(currentNumber);
+                }
+            }
+        });
+
+        findViewById(R.id.btnDot).setOnClickListener(v -> {
+            if (currentNumber.isEmpty()){
+                currentNumber = "0.";
+                tvResult.setText(currentNumber);
+                return;
+            }
+
+            if (!currentNumber.contains(".")){
+                currentNumber += ".";
+                tvResult.setText(currentNumber);
+            }
+        });
     }
 
     private void setNumberListeners() {
