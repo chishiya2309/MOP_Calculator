@@ -3,6 +3,7 @@ package com.example.mytinh;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -11,12 +12,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class MainActivity extends AppCompatActivity {
     //Hiển thị phép tính
     private TextView tvExpression;
 
     //Hiển thị kết quả hoặc số đang nhập
     private TextView tvResult;
+
+    private ImageButton btnHistory;
 
     // Lưu chuỗi số người dùng đang nhập hiện tại
     private String currentNumber = "0";
@@ -26,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Lưu giá trị số thứ nhất, NaN dùng để đánh dấu là chưa có giá trị
     private double firstValue = Double.NaN;
+
+    private ArrayList<String> historyList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         // Gán TextView từ ID trong layout
         tvExpression = findViewById(R.id.tvExpression);
         tvResult = findViewById(R.id.tvResult);
+        btnHistory = findViewById(R.id.btnHistory);
         tvResult.setText(currentNumber);
 
         // Gắn sự kiện cho các nút
@@ -84,6 +93,13 @@ public class MainActivity extends AppCompatActivity {
                 currentNumber += ".";
                 tvResult.setText(currentNumber);
             }
+        });
+
+        btnHistory.setOnClickListener(v -> {
+            ArrayList<String> reversedHistory = new ArrayList<>(historyList);
+            Collections.reverse(reversedHistory);
+            HistoryBottomSheetDialogFragment bottomSheet = HistoryBottomSheetDialogFragment.newInstance(reversedHistory);
+            bottomSheet.show(getSupportFragmentManager(), "HistoryBottomSheet");
         });
     }
 
@@ -143,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateExpressionWithOperator() {
         StringBuilder expression = new StringBuilder();
 
+        // Hiển thị số thứ nhất + toán tử
         if(!Double.isNaN(firstValue)) {
             if(firstValue == (long) firstValue) {
                 expression.append(String.format("%d", (long) firstValue));
@@ -183,6 +200,16 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     fullExpression.append(String.valueOf(secondValue));
                 }
+
+                String resultString;
+                if (result == (long) result) {
+                    resultString = String.format("%d", (long) result);
+                } else {
+                    resultString = String.valueOf(result);
+                }
+
+                addHistory(fullExpression.toString() + " = " + resultString);
+
                 fullExpression.append(" =");
 
                 tvExpression.setText(fullExpression.toString());
@@ -206,6 +233,13 @@ public class MainActivity extends AppCompatActivity {
                 currentNumber = "0";
                 operator = "";
             }
+        }
+    }
+
+    private void addHistory(String entry) {
+        historyList.add(entry);
+        if (historyList.size() > 10) {
+            historyList.remove(0);
         }
     }
 }

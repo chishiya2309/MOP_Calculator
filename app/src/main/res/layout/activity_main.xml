@@ -9,17 +9,27 @@
     android:padding="24dp"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/displayArea"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="bottom|end"
         android:paddingBottom="32dp"
         app:layout_constraintHeight_percent="0.35"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnHistory"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="History"
+            android:padding="12dp"
+            android:src="@android:drawable/ic_menu_recent_history"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#A5A5A5" />
 
         <TextView
             android:id="@+id/tvExpression"
@@ -29,6 +39,9 @@
             android:text=""
             android:textColor="#A5A5A5"
             android:textSize="28sp"
+            app:layout_constraintBottom_toTopOf="@id/tvResult"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="125 x 2" />
 
         <TextView
@@ -42,8 +55,11 @@
             android:fontFamily="sans-serif-light"
             app:autoSizeTextType="uniform"
             app:autoSizeMaxTextSize="72sp"
-            app:autoSizeMinTextSize="32sp" />
-    </LinearLayout>
+            app:autoSizeMinTextSize="32sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/flow"
