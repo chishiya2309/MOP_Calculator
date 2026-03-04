@@ -52,55 +52,76 @@ public class MainActivity extends AppCompatActivity {
         tvExpression = findViewById(R.id.tvExpression);
         tvResult = findViewById(R.id.tvResult);
         btnHistory = findViewById(R.id.btnHistory);
-        tvResult.setText(currentNumber);
+        
+        if (tvResult != null) {
+            tvResult.setText(currentNumber);
+        }
 
         // Gắn sự kiện cho các nút
         setNumberListeners();
         setOperatorListeners();
 
-        findViewById(R.id.btnClear).setOnClickListener(v -> {
-            currentNumber = "0";
-            firstValue = Double.NaN;
-            operator = "";
-            tvResult.setText("0");
-            tvExpression.setText("");
-            tvExpression.setVisibility(View.GONE);
-        });
-
-        findViewById(R.id.btnEqual).setOnClickListener(v -> calculate());
-
-        findViewById(R.id.btnBackspace).setOnClickListener(v -> {
-            if (currentNumber != null && !currentNumber.isEmpty() && !currentNumber.equals("0")) {
-                currentNumber = currentNumber.substring(0, currentNumber.length() - 1);
-                if (currentNumber.isEmpty()) {
-                    currentNumber = "0";
+        View btnClear = findViewById(R.id.btnClear);
+        if (btnClear != null) {
+            btnClear.setOnClickListener(v -> {
+                currentNumber = "0";
+                firstValue = Double.NaN;
+                operator = "";
+                if (tvResult != null) tvResult.setText("0");
+                if (tvExpression != null) {
+                    tvExpression.setText("");
+                    tvExpression.setVisibility(View.GONE);
                 }
-                tvResult.setText(currentNumber);
-            }
-        });
+            });
+        }
 
-        findViewById(R.id.btnDot).setOnClickListener(v -> {
-            if (currentNumber.isEmpty() || (operator.isEmpty() && !Double.isNaN(firstValue))){
-                if (operator.isEmpty() && !Double.isNaN(firstValue)) {
-                    firstValue = Double.NaN;
+        View btnEqual = findViewById(R.id.btnEqual);
+        if (btnEqual != null) {
+            btnEqual.setOnClickListener(v -> calculate());
+        }
+
+        View btnBackspace = findViewById(R.id.btnBackspace);
+        if (btnBackspace != null) {
+            btnBackspace.setOnClickListener(v -> {
+                if (currentNumber != null && !currentNumber.isEmpty() && !currentNumber.equals("0")) {
+                    currentNumber = currentNumber.substring(0, currentNumber.length() - 1);
+                    if (currentNumber.isEmpty()) {
+                        currentNumber = "0";
+                    }
+                    if (tvResult != null) tvResult.setText(currentNumber);
                 }
-                currentNumber = "0.";
-                tvResult.setText(currentNumber);
-                return;
-            }
+            });
+        }
 
-            if (!currentNumber.contains(".")){
-                currentNumber += ".";
-                tvResult.setText(currentNumber);
-            }
-        });
+        View btnDot = findViewById(R.id.btnDot);
+        if (btnDot != null) {
+            btnDot.setOnClickListener(v -> {
+                if (currentNumber.isEmpty() || (operator.isEmpty() && !Double.isNaN(firstValue))){
+                    if (operator.isEmpty() && !Double.isNaN(firstValue)) {
+                        firstValue = Double.NaN;
+                    }
+                    currentNumber = "0.";
+                    if (tvResult != null) tvResult.setText(currentNumber);
+                    return;
+                }
 
-        btnHistory.setOnClickListener(v -> {
-            ArrayList<String> reversedHistory = new ArrayList<>(historyList);
-            Collections.reverse(reversedHistory);
-            HistoryBottomSheetDialogFragment bottomSheet = HistoryBottomSheetDialogFragment.newInstance(reversedHistory);
-            bottomSheet.show(getSupportFragmentManager(), "HistoryBottomSheet");
-        });
+                if (!currentNumber.contains(".")){
+                    currentNumber += ".";
+                    if (tvResult != null) tvResult.setText(currentNumber);
+                }
+            });
+        }
+
+        if (btnHistory != null) {
+            btnHistory.setOnClickListener(v -> {
+                ArrayList<String> reversedHistory = new ArrayList<>(historyList);
+                Collections.reverse(reversedHistory);
+                HistoryBottomSheetDialogFragment bottomSheet = HistoryBottomSheetDialogFragment.newInstance(reversedHistory);
+                bottomSheet.show(getSupportFragmentManager(), "HistoryBottomSheet");
+            });
+        }
+
+        setScientificListeners();
     }
 
     private void setNumberListeners() {
@@ -122,11 +143,12 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 currentNumber += digit;
             }
-            tvResult.setText(currentNumber);
+            if (tvResult != null) tvResult.setText(currentNumber);
         };
 
         for (int id : numberIds) {
-            findViewById(id).setOnClickListener(listener);
+            View v = findViewById(id);
+            if (v != null) v.setOnClickListener(listener);
         }
     }
 
@@ -152,11 +174,14 @@ public class MainActivity extends AppCompatActivity {
         };
 
         for (int id : operatorIds) {
-            findViewById(id).setOnClickListener(listener);
+            View v = findViewById(id);
+            if (v != null) v.setOnClickListener(listener);
         }
     }
 
     private void updateExpressionWithOperator() {
+        if (tvExpression == null) return;
+        
         StringBuilder expression = new StringBuilder();
 
         // Hiển thị số thứ nhất + toán tử
@@ -212,13 +237,17 @@ public class MainActivity extends AppCompatActivity {
 
                 fullExpression.append(" =");
 
-                tvExpression.setText(fullExpression.toString());
-                tvExpression.setVisibility(View.VISIBLE);
+                if (tvExpression != null) {
+                    tvExpression.setText(fullExpression.toString());
+                    tvExpression.setVisibility(View.VISIBLE);
+                }
 
-                if (result == (long) result) {
-                    tvResult.setText(String.format("%d", (long) result));
-                } else {
-                    tvResult.setText(String.valueOf(result));
+                if (tvResult != null) {
+                    if (result == (long) result) {
+                        tvResult.setText(String.format("%d", (long) result));
+                    } else {
+                        tvResult.setText(String.valueOf(result));
+                    }
                 }
 
                 // Lưu kết quả vào firstValue để dùng tiếp
@@ -226,9 +255,11 @@ public class MainActivity extends AppCompatActivity {
                 currentNumber = "";
                 operator = "";
             } catch (ArithmeticException e) {
-                tvResult.setText("Error");
-                tvExpression.setText("");
-                tvExpression.setVisibility(View.GONE);
+                if (tvResult != null) tvResult.setText("Error");
+                if (tvExpression != null) {
+                    tvExpression.setText("");
+                    tvExpression.setVisibility(View.GONE);
+                }
                 firstValue = Double.NaN;
                 currentNumber = "0";
                 operator = "";
@@ -242,4 +273,144 @@ public class MainActivity extends AppCompatActivity {
             historyList.remove(0);
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("CURRENT_NUMBER", currentNumber);
+        outState.putString("OPERATOR", operator);
+        outState.putDouble("FIRST_VALUE", firstValue);
+        outState.putStringArrayList("HISTORY", historyList);
+
+        if (tvExpression != null) {
+            outState.putString("EXPRESSION_TEXT", tvExpression.getText().toString());
+            outState.putInt("EXPRESSION_VISIBILITY", tvExpression.getVisibility());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Phục hồi lại dữ liệu
+        currentNumber = savedInstanceState.getString("CURRENT_NUMBER", "0");
+        operator = savedInstanceState.getString("OPERATOR", "");
+        firstValue = savedInstanceState.getDouble("FIRST_VALUE", Double.NaN);
+
+        historyList = savedInstanceState.getStringArrayList("HISTORY");
+        if (historyList == null) {
+            historyList = new ArrayList<>();
+        }
+
+        // Cập nhật lại UI ngay lập tức
+        if (tvResult != null) {
+            if (currentNumber.isEmpty() && !Double.isNaN(firstValue)) {
+                if (firstValue == (long) firstValue) {
+                    tvResult.setText(String.format("%d", (long) firstValue));
+                } else {
+                    tvResult.setText(String.valueOf(firstValue));
+                }
+            } else {
+                tvResult.setText(currentNumber.isEmpty() ? "0" : currentNumber);
+            }
+        }
+        if (tvExpression != null) {
+            tvExpression.setText(savedInstanceState.getString("EXPRESSION_TEXT", ""));
+            tvExpression.setVisibility(savedInstanceState.getInt("EXPRESSION_VISIBILITY", View.GONE));
+        }
+    }
+
+    private void setScientificListeners() {
+        // --- PHÉP TOÁN 1 NGÔI ---
+        // Thay btnOpenParen/Close bằng btnLog và btnExp
+        int[] unaryIds = { R.id.btnSin, R.id.btnCos, R.id.btnTan, R.id.btnSqrt, R.id.btnSquare, R.id.btnLog, R.id.btnExp };
+
+        View.OnClickListener unaryListener = v -> {
+            Button b = (Button) v;
+            String op = b.getText().toString();
+
+            if (currentNumber.isEmpty() || currentNumber.equals(".")) {
+                if (!Double.isNaN(firstValue)) {
+
+                    currentNumber = String.valueOf(firstValue);
+                } else {
+                    currentNumber = "0";
+                }
+            }
+
+            try {
+                double value = Double.parseDouble(currentNumber);
+                double result = calculatorLogic.calculateUnary(value, op);
+
+                if (result == (long) result) {
+                    currentNumber = String.format("%d", (long) result);
+                } else {
+                    currentNumber = String.valueOf(result);
+                }
+                if (tvResult != null) tvResult.setText(currentNumber);
+
+                if (tvExpression != null) {
+                    tvExpression.setText(op + "(" + value + ") = " + currentNumber);
+                    tvExpression.setVisibility(View.VISIBLE);
+                }
+
+                // Cập nhật lại firstValue để tính tiếp nếu muốn
+                firstValue = result;
+
+            } catch (ArithmeticException e) {
+                if (tvResult != null) tvResult.setText("Error");
+                currentNumber = "";
+                firstValue = Double.NaN;
+            } catch (Exception e) {
+                if (tvResult != null) tvResult.setText("Invalid");
+                currentNumber = "";
+            }
+        };
+
+        for (int id : unaryIds) {
+            Button btn = findViewById(id);
+            if (btn != null) btn.setOnClickListener(unaryListener);
+        }
+
+        // --- HẰNG SỐ (PI) ---
+        Button btnPi = findViewById(R.id.btnPi);
+        if (btnPi != null) {
+            btnPi.setOnClickListener(v -> {
+                if (currentNumber.isEmpty() || currentNumber.equals("0")) {
+                    // Trường hợp chưa nhập gì, hoặc vừa bấm phép tính (+, -...)
+                    currentNumber = String.valueOf(Math.PI);
+                } else {
+                    // Trường hợp đang có số (vd 6), ta lấy số đó nhân Pi
+                    try {
+                        double val = Double.parseDouble(currentNumber);
+                        currentNumber = String.valueOf(val * Math.PI);
+                    } catch (Exception e) {
+                        currentNumber = String.valueOf(Math.PI);
+                    }
+                }
+                if (tvResult != null) tvResult.setText(currentNumber);
+            });
+        }
+
+        // --- LŨY THỪA (^) ---
+        Button btnPow = findViewById(R.id.btnPow);
+        if (btnPow != null) {
+            btnPow.setOnClickListener(v -> {
+                String selectedOperator = "^";
+                if (!currentNumber.isEmpty()) {
+                    if (!Double.isNaN(firstValue)) {
+                        calculate();
+                    } else {
+                        firstValue = Double.parseDouble(currentNumber);
+                    }
+                    operator = selectedOperator;
+                    currentNumber = "";
+                    updateExpressionWithOperator();
+                } else if (!Double.isNaN(firstValue)) {
+                    operator = selectedOperator;
+                    updateExpressionWithOperator();
+                }
+            });
+        }
+    }
+
 }
